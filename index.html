@@ -62,7 +62,6 @@
 
     .map-nodes-container {
       display: grid;
-      /* Adjusted to 3 columns for 5 items */
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       width: 90%;
@@ -88,7 +87,6 @@
 
     .map-node-desc { font-size: 11px; color: #cbd5e1; margin-top: 4px; line-height: 1.3; }
 
-    /* Centering the last two items in the grid */
     .map-node-card:nth-child(4) { grid-column: 1 / 2; grid-row: 2; margin-left: 50%; }
     .map-node-card:nth-child(5) { grid-column: 2 / 3; grid-row: 2; margin-right: -50%; }
 
@@ -136,7 +134,7 @@
     /* Hotspot Base */
     .hotspot-btn {
       position: absolute;
-      transform: translate(-50%, -100%);
+      transform: translate(-50%, -50%);
       cursor: pointer;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
       display: flex;
@@ -148,44 +146,45 @@
 
     /* Character Pins */
     .character-btn {
-      background: rgba(2, 132, 199, 0.6);
+      background: rgba(2, 132, 199, 0.85);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
       color: #ffffff;
-      border: 1.5px solid rgba(255, 255, 255, 0.7);
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
       border-radius: 14px;
       padding: 4px 8px;
       font-size: 10px;
       font-weight: 700;
-      opacity: 0.9;
+      opacity: 0.95;
+      white-space: nowrap;
     }
 
-    .character-btn.main-player { background: rgba(147, 51, 234, 0.7); border-color: rgba(233, 213, 255, 0.9); }
-    .character-btn.interacted { background: rgba(16, 185, 129, 0.75); border-color: rgba(167, 243, 208, 0.9); }
+    .character-btn.main-player { background: rgba(147, 51, 234, 0.85); border-color: rgba(233, 213, 255, 0.9); }
+    .character-btn.interacted { background: rgba(16, 185, 129, 0.85); border-color: rgba(167, 243, 208, 0.9); }
 
     /* Info ("i") Hotspots */
     .info-btn {
-      background: rgba(234, 88, 12, 0.75);
+      background: rgba(234, 88, 12, 0.85);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
       color: #ffffff;
-      border: 1.5px solid rgba(255, 255, 255, 0.8);
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
       border-radius: 50%;
-      width: 24px;
-      height: 24px;
+      width: 26px;
+      height: 26px;
       justify-content: center;
       font-size: 12px;
       font-weight: 800;
-      opacity: 0.9;
+      opacity: 0.95;
     }
 
     .info-btn.interacted { background: rgba(16, 185, 129, 0.85); border-color: rgba(167, 243, 208, 0.9); }
 
-    .hotspot-btn:hover, .hotspot-btn:active { opacity: 1; transform: translate(-50%, -108%) scale(1.1); }
+    .hotspot-btn:hover, .hotspot-btn:active { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
 
     @keyframes floatPulse {
-      0%, 100% { transform: translate(-50%, -100%) scale(0.98); }
-      50% { transform: translate(-50%, -105%) scale(1.04); }
+      0%, 100% { transform: translate(-50%, -50%) scale(0.98); }
+      50% { transform: translate(-50%, -52%) scale(1.04); }
     }
 
     /* UI Overlay Elements */
@@ -300,7 +299,7 @@
     .choice-btn { background: #0284c7; text-align: left; padding: 8px 10px; border-radius: 8px; font-size: 12px; line-height: 1.2; }
     .choice-btn:hover { background: #0369a1; }
 
-    /* Overlay Fullscreen Cards (Quiz & Room Transition) */
+    /* Overlay Fullscreen Cards */
     .card-overlay {
       position: absolute;
       top: 0;
@@ -373,12 +372,10 @@
     <div id="background-layer"></div>
     <div id="hotspots-layer"></div>
 
-    <!-- UI Overlay (always visible in a room) -->
     <div class="ui-overlay">
       <div class="top-bar">
         <div id="room-badge" class="badge-pill">🏥 Room Title</div>
         
-        <!-- Shortcut to exit to Map -->
         <button id="map-shortcut" class="map-back-btn" onclick="exitToMap()">🗺️ View Hospital Map</button>
 
         <div class="top-actions">
@@ -387,56 +384,48 @@
         </div>
       </div>
 
-      <!-- Dialogue / Info Bubble -->
       <div id="dialogue-box" class="dialogue-modal hidden">
         <button class="close-btn" onclick="closeDialogue()">&times;</button>
         <h4 id="speaker-name">Name</h4>
         <p id="speaker-text">Text content</p>
         
-        <!-- Editable Main Player Name -->
         <div id="player-name-editor" class="name-edit-container hidden">
           <input type="text" id="inline-name-input" class="inline-name-input" value="Emilia" placeholder="Enter Name">
           <button class="save-name-btn" onclick="savePlayerName()">Set Name</button>
         </div>
 
-        <!-- Interactive Dialogue Choices -->
         <div id="dialogue-choices" class="choice-container hidden"></div>
       </div>
     </div>
 
-    <!-- Fullscreen Hospital Map (Landing) -->
+    <!-- Map Screen -->
     <div id="map-overlay">
       <div id="map-title">Hospital Main Map Overview</div>
       <div class="map-nodes-container">
-        <!-- Node 1: Waiting Room -->
         <div class="map-node-card" onclick="jumpToRoom('waiting')">
           <div class="map-icon">🏥</div>
           <div class="map-node-title">Waiting Room</div>
           <div class="map-node-desc">Check-in, meet staff, and learn hygiene basics.</div>
         </div>
-        <!-- Node 2: GP -->
         <div class="map-node-card" onclick="jumpToRoom('gp')">
           <div class="map-icon">👨‍⚕️</div>
           <div class="map-node-title">GP Consultation</div>
           <div class="map-node-desc">Dr. Smith's office. Explore tools and anatomy.</div>
         </div>
-        <!-- Node 3: Pharmacy -->
         <div class="map-node-card" onclick="jumpToRoom('pharmacy')">
           <div class="map-icon">💊</div>
           <div class="map-node-title">City Pharmacy</div>
           <div class="map-node-desc">Meet Sarah. Explore prescriptions & medicine.</div>
         </div>
-        <!-- Node 4: Ambulance Bay -->
         <div class="map-node-card" onclick="jumpToRoom('ambulance_bay')">
           <div class="map-icon">🚑</div>
           <div class="map-node-title">Ambulance Bay</div>
           <div class="map-node-desc">Meet Paramedic Dave. Learn emergency triage.</div>
         </div>
-        <!-- New Node 5: Operating Theatre -->
         <div class="map-node-card" onclick="jumpToRoom('theatre')">
           <div class="map-icon">✂️</div>
           <div class="map-node-title">Operating Theatre</div>
-          <div class="map-node-desc">Explore sterile fields, surgical tools, and robotics.</div>
+          <div class="map-node-desc">Explore sterile fields, surgical lights, and monitoring.</div>
         </div>
       </div>
     </div>
@@ -451,7 +440,7 @@
       </div>
     </div>
 
-    <!-- Transition Popup Modal -->
+    <!-- Transition Modal -->
     <div id="transition-modal" class="card-overlay hidden">
       <div class="card-content">
         <h3 id="trans-title">🎉 Quiz Passed!</h3>
@@ -467,7 +456,6 @@
     let activeChar = null;
     let npcStep = 0;
 
-    // Room Datasets using EXACT filenames with added extensions
     const rooms = {
       waiting: {
         title: "🏥 Hospital Waiting Room",
@@ -551,21 +539,26 @@
       },
       theatre: {
         title: "✂️ Operating Theatre",
-        image: "Gemini_Generated_Image_hfyopshfyopshfyo.jpg",
+        image: "Gemini_Generated_Image_hfyopshfyopshfyo_2.jpg",
         nodes: [
-          { id: "ot_observer", type: "char", isInteractiveTree: "paramedic", name: "Paramedic Dave (Observing)", x: "20%", y: "50%", text: "Fascinating, isn't it? Even we only get this close to observe the most sterile surgeries." },
-          { id: "ot_child", type: "char", isPlayer: true, name: "Player", x: "70%", y: "70%", text: "Wow, Dave! It looks like a high-tech clean room. Why are they wearing special suits?" },
-          { id: "ot_i_sink", type: "info", title: "Scrub Sink Station", x: "6%", y: "70%", text: "INFO: Before entering, staff use antiseptic surgical scrub here to minimize microbial presence on their skin." },
-          { id: "ot_i_robot", type: "info", title: "Surgical Robot Arm", x: "47%", y: "15%", text: "INFO: Computer-assisted robotic systems allow surgeons to make precise, minimally-invasive incisions." },
-          { id: "ot_i_sterile_tray", type: "info", title: "Sterile Equipment Tray", x: "46%", y: "75%", text: "INFO: Instruments are sterilized under intense heat & pressure. They must remain completely untouched until surgery begins." },
-          { id: "ot_i_monitor", type: "info", title: "Vital Signs Monitoring", x: "16%", y: "60%", text: "INFO: Anesthesiologists continuously watch heart rate, blood pressure, and oxygen saturation on this multi-parameter screen." }
+          /* Corrected Character Pins aligned with image */
+          { id: "ot_emilia", type: "char", isPlayer: true, name: "Player", x: "67%", y: "68%", text: "Hello! I'm {PLAYER}. I'm standing outside the glass window observing how clean and organized the operating theatre is!" },
+          { id: "ot_doc_window", type: "char", isInteractiveTree: "theatre_doc", name: "Dr. Taylor (Inside)", x: "43%", y: "42%", text: "Hello {PLAYER}! I'm speaking through the intercom. We keep this theatre completely sterile to protect patients during surgery." },
+          { id: "ot_surgeons", type: "char", name: "Surgical Team", x: "56%", y: "38%", text: "The team is focused on performing surgery! Everyone inside wears full sterile gowns, masks, and caps." },
+          
+          /* Corrected Info Hotspots aligned with visual objects */
+          { id: "ot_i_vitals", type: "info", title: "Vital Signs & Anesthesia Monitor", x: "15%", y: "52%", text: "INFO: Displays real-time heart rate, blood pressure, and oxygen levels to monitor the patient's condition continuously." },
+          { id: "ot_i_lights", type: "info", title: "Surgical Overhead Lights", x: "51%", y: "15%", text: "INFO: Specialized shadowless lights provide bright, focused illumination directly onto the operating field." },
+          { id: "ot_i_trays", type: "info", title: "Sterile Instrument Cart", x: "48%", y: "80%", text: "INFO: All scalpels, clamps, and scissors are sterilized in autoclaves and placed on sterile drapes before use." },
+          { id: "ot_i_sink", type: "info", title: "Surgical Scrub Sink", x: "95%", y: "46%", text: "INFO: Surgical staff perform an extensive hand-scrubbing protocol using antiseptic soap before putting on sterile gloves." },
+          { id: "ot_i_poster", type: "info", title: "Hand Washing Protocol", x: "95%", y: "29%", text: "INFO: Detailed step-by-step guidelines ensure all medical personnel clean their hands thoroughly to prevent contamination." }
         ],
         quiz: [
-          { q: "Why must the operating theatre remain a strict sterile environment?", opts: ["To save money on cleaning supplies", "To prevent harmful bacteria from causing patient infections", "To keep the room cool"], ans: 1 },
-          { q: "What is the primary benefit of computer-assisted robotic surgery?", opts: ["It replaces the human surgeon entirely", "It allows for extreme precision in complex, minimally-invasive procedures", "It reduces electricity usage"], ans: 1 },
-          { q: "What medical professional is primarily responsible for monitoring a patient's vital signs and consciousness during surgery?", opts: ["Nurse Practitioner", "Anesthesiologist", "Physical Therapist"], ans: 1 },
-          { q: "How is surgical equipment typically processed to ensure it is sterile?", opts: ["By washing it with standard dish soap", "By using intense heat and pressure (Autoclave)", "By wiping it with dry towels"], ans: 1 },
-          { q: "What is a mandatory protocol for all surgical staff before entering the sterile field?", opts: ["Checking their personal email", "Applying standard hand lotion", "Performing a specific surgical scrub with antiseptic"], ans: 2 }
+          { q: "Why is the operating theatre separated by a glass observation window?", opts: ["To keep heat inside", "To maintain a clean, sterile environment inside the room", "To make it quiet"], ans: 1 },
+          { q: "What is monitored on the large screen next to the observation window?", opts: ["The hospital schedule", "Patient vital signs like heart rate and blood pressure", "Surgical instrument inventory"], ans: 1 },
+          { q: "Why do surgical staff perform a specialized hand-scrub protocol at the sink?", opts: ["To keep their hands warm", "To eliminate bacteria and maintain strict sterility", "To test the water temperature"], ans: 1 },
+          { q: "What is the function of overhead surgical lights?", opts: ["To brighten the room for observers", "To provide shadowless, high-intensity focus on the operating field", "To keep the room warm"], ans: 1 },
+          { q: "Why are surgical instruments laid out on sterile-covered carts?", opts: ["To make them easy to count", "To keep them completely free of micro-organisms before surgery", "To prevent them from scratching the table"], ans: 1 }
         ]
       }
     };
@@ -574,7 +567,6 @@
     let currentQuizIndex = 0;
     let quizScore = 0;
 
-    // Interactive Dialogue Trees
     const dialogueTrees = {
       dr: [
         { speaker: "Dr. Smith (GP)", text: "Welcome in, {PLAYER}! Take a seat. How can I help you today?", choices: [ { label: "I want to learn about health checkups.", next: 1 }, { label: "What tools do you use here?", next: 2 } ] },
@@ -589,10 +581,16 @@
         { speaker: "Sarah (Pharmacist)", text: "My pleasure, {PLAYER}! Remember to always check expiry dates, and let me know if you are interested in a flu shot!", choices: [] }
       ],
       paramedic: [
-        { speaker: "Paramedic Dave", text: "Hello {PLAYER}! I operate emergency ambulances to treat and transport patients fast. What would you like to know?", choices: [ { label: "What happens during a emergency call?", next: 1 }, { label: "What specialized gear is inside the ambulance?", next: 2 } ] },
+        { speaker: "Paramedic Dave", text: "Hello {PLAYER}! I operate emergency ambulances to treat and transport patients fast. What would you like to know?", choices: [ { label: "What happens during an emergency call?", next: 1 }, { label: "What specialized gear is inside the ambulance?", next: 2 } ] },
         { speaker: "Paramedic Dave", text: "When 999 is called, dispatch sends us immediately. We stabilize vital signs right on scene before moving patients.", choices: [ { label: "What gear do you use to stabilize patients?", next: 2 }, { label: "Got it! Thanks Dave.", next: 3 } ] },
         { speaker: "Paramedic Dave", text: "We carry AED defibrillators for cardiac emergencies, oxygen, and stretchers to protect the spine during transfer.", choices: [ { label: "Fascinating! Thanks Paramedic Dave.", next: 3 } ] },
         { speaker: "Paramedic Dave", text: "Stay safe out there, {PLAYER}! Feel free to inspect our emergency equipment around the bay.", choices: [] }
+      ],
+      theatre_doc: [
+        { speaker: "Dr. Taylor (Inside)", text: "Hello {PLAYER}! I'm speaking through the intercom. We keep this theatre completely sterile to protect patients during surgery.", choices: [ { label: "Why is everyone wearing blue caps and gowns?", next: 1 }, { label: "How do you monitor the patient during surgery?", next: 2 } ] },
+        { speaker: "Dr. Taylor (Inside)", text: "The caps, gowns, and masks act as barriers! They prevent germs from our hair or clothes from contaminating the sterile surgery area.", choices: [ { label: "That makes sense! How do you track vital signs?", next: 2 }, { label: "Thank you Dr. Taylor!", next: 3 } ] },
+        { speaker: "Dr. Taylor (Inside)", text: "Our monitors track oxygen levels, heart rhythm, and blood pressure second-by-second so the anesthesiologist can keep the patient safe.", choices: [ { label: "Awesome! Thanks for explaining.", next: 3 } ] },
+        { speaker: "Dr. Taylor (Inside)", text: "You're welcome! Take a look around the observation area to see the equipment in action.", choices: [] }
       ]
     };
 
