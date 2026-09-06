@@ -62,10 +62,11 @@
 
     .map-nodes-container {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      /* Adjusted to 3 columns for 5 items */
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       width: 90%;
-      max-width: 780px;
+      max-width: 820px;
     }
 
     .map-node-card {
@@ -83,9 +84,13 @@
 
     .map-icon { font-size: 32px; margin-bottom: 8px; }
 
-    .map-node-title { font-size: 14px; font-weight: 700; color: #ffffff; }
+    .map-node-title { font-size: 13px; font-weight: 700; color: #ffffff; }
 
-    .map-node-desc { font-size: 11px; color: #cbd5e1; margin-top: 4px; }
+    .map-node-desc { font-size: 11px; color: #cbd5e1; margin-top: 4px; line-height: 1.3; }
+
+    /* Centering the last two items in the grid */
+    .map-node-card:nth-child(4) { grid-column: 1 / 2; grid-row: 2; margin-left: 50%; }
+    .map-node-card:nth-child(5) { grid-column: 2 / 3; grid-row: 2; margin-right: -50%; }
 
     /* In-Room Map Button */
     .map-back-btn {
@@ -406,26 +411,32 @@
         <!-- Node 1: Waiting Room -->
         <div class="map-node-card" onclick="jumpToRoom('waiting')">
           <div class="map-icon">🏥</div>
-          <div class="map-node-title">Hospital Waiting Room</div>
+          <div class="map-node-title">Waiting Room</div>
           <div class="map-node-desc">Check-in, meet staff, and learn hygiene basics.</div>
         </div>
         <!-- Node 2: GP -->
         <div class="map-node-card" onclick="jumpToRoom('gp')">
           <div class="map-icon">👨‍⚕️</div>
-          <div class="map-node-title">GP Consultation Room</div>
+          <div class="map-node-title">GP Consultation</div>
           <div class="map-node-desc">Dr. Smith's office. Explore tools and anatomy.</div>
         </div>
         <!-- Node 3: Pharmacy -->
         <div class="map-node-card" onclick="jumpToRoom('pharmacy')">
           <div class="map-icon">💊</div>
           <div class="map-node-title">City Pharmacy</div>
-          <div class="map-node-desc">Meet Sarah. Explore prescriptions & immunizations.</div>
+          <div class="map-node-desc">Meet Sarah. Explore prescriptions & medicine.</div>
         </div>
         <!-- Node 4: Ambulance Bay -->
         <div class="map-node-card" onclick="jumpToRoom('ambulance_bay')">
           <div class="map-icon">🚑</div>
-          <div class="map-node-title">Ambulance & ER Bay</div>
+          <div class="map-node-title">Ambulance Bay</div>
           <div class="map-node-desc">Meet Paramedic Dave. Learn emergency triage.</div>
+        </div>
+        <!-- New Node 5: Operating Theatre -->
+        <div class="map-node-card" onclick="jumpToRoom('theatre')">
+          <div class="map-icon">✂️</div>
+          <div class="map-node-title">Operating Theatre</div>
+          <div class="map-node-desc">Explore sterile fields, surgical tools, and robotics.</div>
         </div>
       </div>
     </div>
@@ -445,7 +456,7 @@
       <div class="card-content">
         <h3 id="trans-title">🎉 Quiz Passed!</h3>
         <p id="trans-text">You have mastered this room's medical knowledge.</p>
-        <button id="trans-action-btn" class="primary-btn" onclick="exitToMap()">Proceed to Next Station</button>
+        <button id="trans-action-btn" class="primary-btn" onclick="exitToMap()">Back to Main Map Overview</button>
       </div>
     </div>
   </div>
@@ -536,6 +547,25 @@
           { q: "What primary emergency phone number is dialed in the UK for ambulance dispatch?", opts: ["999", "111", "101"], ans: 0 },
           { q: "What medical supply inside ambulances helps patients struggling to breathe?", opts: ["Oxygen Tanks", "Antiseptic Wipes", "Bandages"], ans: 0 },
           { q: "What is the main objective of Paramedics during emergency calls?", opts: ["To diagnose long-term ailments", "To stabilize patients and safely transport them to Emergency Care", "To file insurance paperwork"], ans: 1 }
+        ]
+      },
+      theatre: {
+        title: "✂️ Operating Theatre",
+        image: "Gemini_Generated_Image_hfyopshfyopshfyo.jpg",
+        nodes: [
+          { id: "ot_observer", type: "char", isInteractiveTree: "paramedic", name: "Paramedic Dave (Observing)", x: "20%", y: "50%", text: "Fascinating, isn't it? Even we only get this close to observe the most sterile surgeries." },
+          { id: "ot_child", type: "char", isPlayer: true, name: "Player", x: "70%", y: "70%", text: "Wow, Dave! It looks like a high-tech clean room. Why are they wearing special suits?" },
+          { id: "ot_i_sink", type: "info", title: "Scrub Sink Station", x: "6%", y: "70%", text: "INFO: Before entering, staff use antiseptic surgical scrub here to minimize microbial presence on their skin." },
+          { id: "ot_i_robot", type: "info", title: "Surgical Robot Arm", x: "47%", y: "15%", text: "INFO: Computer-assisted robotic systems allow surgeons to make precise, minimally-invasive incisions." },
+          { id: "ot_i_sterile_tray", type: "info", title: "Sterile Equipment Tray", x: "46%", y: "75%", text: "INFO: Instruments are sterilized under intense heat & pressure. They must remain completely untouched until surgery begins." },
+          { id: "ot_i_monitor", type: "info", title: "Vital Signs Monitoring", x: "16%", y: "60%", text: "INFO: Anesthesiologists continuously watch heart rate, blood pressure, and oxygen saturation on this multi-parameter screen." }
+        ],
+        quiz: [
+          { q: "Why must the operating theatre remain a strict sterile environment?", opts: ["To save money on cleaning supplies", "To prevent harmful bacteria from causing patient infections", "To keep the room cool"], ans: 1 },
+          { q: "What is the primary benefit of computer-assisted robotic surgery?", opts: ["It replaces the human surgeon entirely", "It allows for extreme precision in complex, minimally-invasive procedures", "It reduces electricity usage"], ans: 1 },
+          { q: "What medical professional is primarily responsible for monitoring a patient's vital signs and consciousness during surgery?", opts: ["Nurse Practitioner", "Anesthesiologist", "Physical Therapist"], ans: 1 },
+          { q: "How is surgical equipment typically processed to ensure it is sterile?", opts: ["By washing it with standard dish soap", "By using intense heat and pressure (Autoclave)", "By wiping it with dry towels"], ans: 1 },
+          { q: "What is a mandatory protocol for all surgical staff before entering the sterile field?", opts: ["Checking their personal email", "Applying standard hand lotion", "Performing a specific surgical scrub with antiseptic"], ans: 2 }
         ]
       }
     };
