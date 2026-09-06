@@ -1,17 +1,112 @@
-const rooms = {
-      waiting: {
-        title: "🏥 Hospital Waiting Room",
-        image: "Gemini_Generated_Image_cpr3etcpr3etcpr3.jpg",
-        // ...
-      },
-      gp: {
-        title: "👨‍⚕️ GP Consultation Room",
-        image: "Gemini_Generated_Image_8xr0rp8xr0rp8xr0.jpg",
-        // ...
-      },
-      ambulance: {
-        title: "🚑 Emergency Ambulance Unit",
-        image: "Gemini_Generated_Image_5vfx3o5vfx3o5vfx.jpg",
-        // ...
-      }
-    };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Hospital Hero</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: #0f172a;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #game-container {
+      width: 100%;
+      height: 100%;
+      max-width: 960px;
+      max-height: 540px;
+      position: relative;
+      background-color: #000;
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+
+    #background-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 1;
+      transition: background-image 0.3s ease-in-out;
+    }
+
+    #hotspots-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+    }
+
+    /* Hotspot Base */
+    .hotspot-btn {
+      position: absolute;
+      transform: translate(-50%, -100%);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.2s ease;
+      animation: floatPulse 2.5s infinite ease-in-out;
+    }
+
+    /* Character Pins */
+    .character-btn {
+      background: rgba(2, 132, 199, 0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      color: #ffffff;
+      border: 1.5px solid rgba(255, 255, 255, 0.7);
+      border-radius: 14px;
+      padding: 4px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+
+    .character-btn.main-player {
+      background: rgba(147, 51, 234, 0.7);
+      border-color: rgba(233, 213, 255, 0.9);
+    }
+
+    .character-btn.interacted {
+      background: rgba(16, 185, 129, 0.75);
+      border-color: rgba(167, 243, 208, 0.9);
+    }
+
+    /* Info ("i") Hotspots */
+    .info-btn {
+      background: rgba(234, 88, 12, 0.75);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      color: #ffffff;
+      border: 1.5px solid rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      opacity:
