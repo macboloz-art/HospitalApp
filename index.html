@@ -37,7 +37,7 @@
       overflow: hidden;
     }
 
-    /* Hospital Map (Landing Page) */
+    /* Hospital Map Overlay */
     #map-overlay {
       position: absolute;
       top: 0;
@@ -51,7 +51,7 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      color: #f1firstAid5;
+      color: #f8fafc;
       opacity: 1;
       transition: opacity 0.5s ease;
     }
@@ -62,7 +62,7 @@
 
     .map-nodes-container {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
       width: 90%;
       max-width: 780px;
@@ -104,7 +104,6 @@
     }
 
     .map-back-btn:hover { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
-
 
     /* Playable Areas Base Layer */
     #background-layer {
@@ -395,7 +394,7 @@
           <button class="save-name-btn" onclick="savePlayerName()">Set Name</button>
         </div>
 
-        <!-- Interactive Dialogue Choices for Doctor & Paramedic & Pharmacist -->
+        <!-- Interactive Dialogue Choices -->
         <div id="dialogue-choices" class="choice-container hidden"></div>
       </div>
     </div>
@@ -421,6 +420,12 @@
           <div class="map-icon">💊</div>
           <div class="map-node-title">City Pharmacy</div>
           <div class="map-node-desc">Meet Sarah. Explore prescriptions & immunizations.</div>
+        </div>
+        <!-- Node 4: Ambulance Bay -->
+        <div class="map-node-card" onclick="jumpToRoom('ambulance_bay')">
+          <div class="map-icon">🚑</div>
+          <div class="map-node-title">Ambulance & ER Bay</div>
+          <div class="map-node-desc">Meet Paramedic Dave. Learn emergency triage.</div>
         </div>
       </div>
     </div>
@@ -451,13 +456,11 @@
     let activeChar = null;
     let npcStep = 0;
 
-    // Room Datasets & Dynamic Interactive Nodes
+    // Room Datasets using EXACT filenames with added extensions
     const rooms = {
       waiting: {
         title: "🏥 Hospital Waiting Room",
         image: "Gemini_Generated_Image_cpr3etcpr3etcpr3.jpg",
-        nextRoom: "gp",
-        nextRoomTitle: "GP Consultation Room",
         nodes: [
           { id: "w_player", type: "char", isPlayer: true, name: "Player", x: "45.5%", y: "20%", text: "Hi everyone! I'm {PLAYER}, checking in for my appointment today." },
           { id: "w_orderly", type: "char", name: "Orderly", x: "7.5%", y: "48%", text: "Hello, {PLAYER}! I keep the lobby clean and sanitize seats to stop germs from spreading." },
@@ -469,8 +472,6 @@
           { id: "w_patient_sling", type: "char", name: "Patient with Sling", x: "84%", y: "29%", text: "Hi {PLAYER}! My arm sling immobilizes bone joints so injured tissues heal correctly." },
           { id: "w_child", type: "char", name: "Waiting Child", x: "53%", y: "16%", text: "Hi {PLAYER}! Wearing clean clothes and washing hands keeps clinic spaces safe for everyone." },
           { id: "w_dog", type: "char", name: "Therapy Dog", x: "58%", y: "66%", text: "Woof! *Therapy dogs reduce patient stress and lower anxiety levels in hospital lobbies!*" },
-          
-          // Info ("i") Points
           { id: "w_i_sanitizer", type: "info", title: "Hand Sanitizer Station", x: "30%", y: "42%", text: "INFO: Sanitizing hands with alcohol rub kills 99.9% of routine germs instantly." },
           { id: "w_i_board", type: "info", title: "Information Notice Board", x: "92%", y: "22%", text: "INFO: Notice boards inform patients about seasonal flu shots and hygiene policies." }
         ],
@@ -485,12 +486,8 @@
       gp: {
         title: "👨‍⚕️ GP Consultation Room",
         image: "Gemini_Generated_Image_8xr0rp8xr0rp8xr0.jpg",
-        nextRoom: "pharmacy",
-        nextRoomTitle: "City Pharmacy",
         nodes: [
           { id: "gp_dr", type: "char", isInteractiveTree: "dr", name: "Dr. Smith (GP)", x: "19%", y: "45%", text: "Welcome in, {PLAYER}! Take a seat. How can I help you today?" },
-          
-          // Info ("i") Points inside Consultation Room
           { id: "gp_i_chart", type: "info", title: "Anatomy Chart", x: "75%", y: "10%", text: "INFO: Visual anatomy charts help doctors explain organ functions and health conditions to patients." },
           { id: "gp_i_trolley", type: "info", title: "Medical Equipment Trolley", x: "70%", y: "48%", text: "INFO: Holds diagnostic tools like blood pressure cuffs (sphygmomanometers) and stethoscopes." },
           { id: "gp_i_scale", type: "info", title: "Weight Scale", x: "76%", y: "85%", text: "INFO: Measuring body weight and BMI assists GPs in monitoring physical growth and dosage accuracy." },
@@ -508,12 +505,8 @@
       pharmacy: {
         title: "💊 City Pharmacy",
         image: "Gemini_Generated_Image_2r2u5a2r2u5a2r2u.jpg",
-        nextRoom: "waiting", // For demo, loop back to the start
-        nextRoomTitle: "Hospital Waiting Room",
         nodes: [
           { id: "phar_sarah", type: "char", isInteractiveTree: "pharmacist", name: "Sarah (Pharmacist)", x: "42%", y: "43%", text: "Hello! I'm Sarah. I prepare prescriptions and offer health advice. How can I help you, {PLAYER}?" },
-          
-          // Info ("i") Points inside Pharmacy
           { id: "phar_i_shelves_main", type: "info", title: "Main Shelving", x: "20%", y: "25%", text: "INFO: Shelves are organized. Only authorized staff can retrieve medications stored in this main area." },
           { id: "phar_i_pills", type: "info", title: "Prescription Drugs", x: "29%", y: "47%", text: "INFO: All prescription drugs are regulated. The pharmacist verifies dosage instructions from the doctor." },
           { id: "phar_i_poster_flu", type: "info", title: "Flu Shot Poster", x: "83%", y: "37%", text: "INFO: Pharmacies often provide immunizations, like flu shots, to support public health." },
@@ -525,7 +518,24 @@
           { q: "What is an important public health service often provided by pharmacies?", opts: ["Free gym memberships", "Routine immunizations (like flu shots)", "Holiday booking services"], ans: 1 },
           { q: "What does OTC stand for in a pharmacy setting?", opts: ["On The Case", "Over-The-Counter products", "Off-The-Cabinet meds"], ans: 1 },
           { q: "Why must the pharmacist verify instructions on a prescription?", opts: ["To ensure the dosage and instructions from the doctor are safe and accurate", "To decide if they like the doctor's handwriting", "To make the waiting time longer"], ans: 0 },
-          { q: "What is the primary function of checking an expiry date on medication?", opts: ["To check the shelf's neatness", "To ensure the product is still safe and effective", "To decide when to hold a sale"], ans: 1 }
+          { q: "What is an essential step when purchasing medication from the pharmacist?", opts: ["Ensuring you understand how and when to safely take it", "Rushing out without questions", "Asking for a gift box"], ans: 0 }
+        ]
+      },
+      ambulance_bay: {
+        title: "🚑 Ambulance & Emergency Bay",
+        image: "Gemini_Generated_Image_5vfx3o5vfx3o5vfx.jpg",
+        nodes: [
+          { id: "amb_dave", type: "char", isInteractiveTree: "paramedic", name: "Paramedic Dave", x: "35%", y: "55%", text: "Hi {PLAYER}! I operate emergency response transport to stabilize critical patients." },
+          { id: "amb_i_vehicle", type: "info", title: "Ambulance Van", x: "65%", y: "50%", text: "INFO: Ambulances carry life-support systems, oxygen tanks, and ECG monitors for rapid transport." },
+          { id: "amb_i_stretcher", type: "info", title: "Wheeled Stretcher", x: "50%", y: "70%", text: "INFO: Stretchers keep injured spinal structures stabilized while moving patients safely." },
+          { id: "amb_i_defib", type: "info", title: "AED Defibrillator", x: "20%", y: "60%", text: "INFO: Automated External Defibrillators deliver controlled electrical charges during cardiac arrests." }
+        ],
+        quiz: [
+          { q: "What primary emergency equipment is used during sudden cardiac arrest?", opts: ["Stethoscope", "Automated External Defibrillator (AED)", "Thermometer"], ans: 1 },
+          { q: "Why are stretchers used in ambulance transport?", opts: ["To keep patient spines and joints stabilized during movement", "To save walking time", "To store medical bags"], ans: 0 },
+          { q: "What primary emergency phone number is dialed in the UK for ambulance dispatch?", opts: ["999", "111", "101"], ans: 0 },
+          { q: "What medical supply inside ambulances helps patients struggling to breathe?", opts: ["Oxygen Tanks", "Antiseptic Wipes", "Bandages"], ans: 0 },
+          { q: "What is the main objective of Paramedics during emergency calls?", opts: ["To diagnose long-term ailments", "To stabilize patients and safely transport them to Emergency Care", "To file insurance paperwork"], ans: 1 }
         ]
       }
     };
@@ -534,7 +544,7 @@
     let currentQuizIndex = 0;
     let quizScore = 0;
 
-    // Interactive Dialogue Decision Trees
+    // Interactive Dialogue Trees
     const dialogueTrees = {
       dr: [
         { speaker: "Dr. Smith (GP)", text: "Welcome in, {PLAYER}! Take a seat. How can I help you today?", choices: [ { label: "I want to learn about health checkups.", next: 1 }, { label: "What tools do you use here?", next: 2 } ] },
@@ -547,27 +557,28 @@
         { speaker: "Sarah (Pharmacist)", text: "A prescription is a detailed instruction from your doctor about a specific medication and how to take it. I verify it and prepare the exact dose for you.", choices: [ { label: "Understood. How about over-the-counter meds?", next: 2 }, { label: "Thanks for clarifying that, Sarah!", next: 3 } ] },
         { speaker: "Sarah (Pharmacist)", text: "OTC stands for Over-The-Counter. These are safe, common medications (like toothpastes or mild pain relief) you can buy directly from the shelves without a doctor's note.", choices: [ { label: "Okay. And what does a prescription do?", next: 1 }, { label: "Thanks, Sarah!", next: 3 } ] },
         { speaker: "Sarah (Pharmacist)", text: "My pleasure, {PLAYER}! Remember to always check expiry dates, and let me know if you are interested in a flu shot!", choices: [] }
+      ],
+      paramedic: [
+        { speaker: "Paramedic Dave", text: "Hello {PLAYER}! I operate emergency ambulances to treat and transport patients fast. What would you like to know?", choices: [ { label: "What happens during a emergency call?", next: 1 }, { label: "What specialized gear is inside the ambulance?", next: 2 } ] },
+        { speaker: "Paramedic Dave", text: "When 999 is called, dispatch sends us immediately. We stabilize vital signs right on scene before moving patients.", choices: [ { label: "What gear do you use to stabilize patients?", next: 2 }, { label: "Got it! Thanks Dave.", next: 3 } ] },
+        { speaker: "Paramedic Dave", text: "We carry AED defibrillators for cardiac emergencies, oxygen, and stretchers to protect the spine during transfer.", choices: [ { label: "Fascinating! Thanks Paramedic Dave.", next: 3 } ] },
+        { speaker: "Paramedic Dave", text: "Stay safe out there, {PLAYER}! Feel free to inspect our emergency equipment around the bay.", choices: [] }
       ]
     };
 
-    // Navigation and Map Logic
     function exitToMap() {
-      // Fade in the map overlay
       document.getElementById('map-overlay').classList.remove('fade-out');
-      // Hide room dialogue
       closeDialogue();
       currentRoomId = null;
     }
 
     function jumpToRoom(roomId) {
       if (rooms[roomId]) {
-        // Fade out the map overlay
         document.getElementById('map-overlay').classList.add('fade-out');
         loadRoom(roomId);
       }
     }
 
-    // Existing Room and Interactivity Logic
     function loadRoom(roomId) {
       currentRoomId = roomId;
       interactedNodes.clear();
@@ -628,7 +639,6 @@
 
     function updateProgress() {
       const room = rooms[currentRoomId];
-      // Filter out player node so clicking main player is not required to unlock quiz
       const requiredNodes = room.nodes.filter(n => !n.isPlayer);
       const totalRequired = requiredNodes.length;
       
@@ -718,7 +728,7 @@
       document.getElementById('dialogue-box').classList.add('hidden');
     }
 
-    // Quiz Logic
+    // Quiz Functions
     function startQuiz() {
       currentQuizIndex = 0;
       quizScore = 0;
@@ -783,7 +793,6 @@
       if (passRate >= 0.8) {
         transTitle.innerText = "🎉 Quiz Passed!";
         transText.innerText = `Great job, ${playerName}! You passed with ${Math.round(passRate * 100)}% (${quizScore}/${room.quiz.length}). You have mastered this room's knowledge.`;
-        // Keep exit to map for all nodes
         actionBtn.innerText = `Back to Main Map Overview`;
         actionBtn.onclick = () => {
           transModal.classList.add('hidden');
@@ -802,7 +811,6 @@
       transModal.classList.remove('hidden');
     }
 
-    // Initialize Game on load by showing the Map
     exitToMap();
   </script>
 </body>
