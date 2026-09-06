@@ -37,6 +37,76 @@
       overflow: hidden;
     }
 
+    /* Hospital Map (Landing Page) */
+    #map-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #f1firstAid5;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    #map-overlay.fade-out { opacity: 0; pointer-events: none; }
+
+    #map-title { font-size: 20px; font-weight: 800; color: #38bdf8; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+
+    .map-nodes-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      width: 90%;
+      max-width: 780px;
+    }
+
+    .map-node-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid #0284c7;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .map-node-card:hover { transform: translateY(-4px) scale(1.03); background: rgba(255, 255, 255, 0.08); border-color: #38bdf8; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); }
+
+    .map-icon { font-size: 32px; margin-bottom: 8px; }
+
+    .map-node-title { font-size: 14px; font-weight: 700; color: #ffffff; }
+
+    .map-node-desc { font-size: 11px; color: #cbd5e1; margin-top: 4px; }
+
+    /* In-Room Map Button */
+    .map-back-btn {
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+      color: #ffffff;
+      border: 1.5px solid #7dd3fc;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(2, 132, 199, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .map-back-btn:hover { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+
+
+    /* Playable Areas Base Layer */
     #background-layer {
       position: absolute;
       top: 0;
@@ -86,15 +156,8 @@
       opacity: 0.9;
     }
 
-    .character-btn.main-player {
-      background: rgba(147, 51, 234, 0.7);
-      border-color: rgba(233, 213, 255, 0.9);
-    }
-
-    .character-btn.interacted {
-      background: rgba(16, 185, 129, 0.75);
-      border-color: rgba(167, 243, 208, 0.9);
-    }
+    .character-btn.main-player { background: rgba(147, 51, 234, 0.7); border-color: rgba(233, 213, 255, 0.9); }
+    .character-btn.interacted { background: rgba(16, 185, 129, 0.75); border-color: rgba(167, 243, 208, 0.9); }
 
     /* Info ("i") Hotspots */
     .info-btn {
@@ -112,15 +175,9 @@
       opacity: 0.9;
     }
 
-    .info-btn.interacted {
-      background: rgba(16, 185, 129, 0.85);
-      border-color: rgba(167, 243, 208, 0.9);
-    }
+    .info-btn.interacted { background: rgba(16, 185, 129, 0.85); border-color: rgba(167, 243, 208, 0.9); }
 
-    .hotspot-btn:hover, .hotspot-btn:active {
-      opacity: 1;
-      transform: translate(-50%, -108%) scale(1.1);
-    }
+    .hotspot-btn:hover, .hotspot-btn:active { opacity: 1; transform: translate(-50%, -108%) scale(1.1); }
 
     @keyframes floatPulse {
       0%, 100% { transform: translate(-50%, -100%) scale(0.98); }
@@ -158,25 +215,6 @@
       color: #0369a1;
       border: 1px solid rgba(56, 189, 248, 0.4);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Testing Shortcut Dropdown */
-    .room-select-dropdown {
-      background: rgba(15, 23, 42, 0.85);
-      color: #38bdf8;
-      border: 1.5px solid #0284c7;
-      border-radius: 20px;
-      padding: 5px 10px;
-      font-size: 11px;
-      font-weight: 700;
-      outline: none;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .room-select-dropdown option {
-      background: #0f172a;
-      color: #ffffff;
     }
 
     .top-actions {
@@ -221,35 +259,14 @@
       animation: fadeIn 0.2s ease-out;
     }
 
-    .dialogue-modal.player-bubble {
-      background: rgba(250, 245, 255, 0.94);
-      border-color: rgba(147, 51, 234, 0.4);
-    }
-
+    .dialogue-modal.player-bubble { background: rgba(250, 245, 255, 0.94); border-color: rgba(147, 51, 234, 0.4); }
     .dialogue-modal.player-bubble h4 { color: #7e22ce; }
 
-    .dialogue-modal h4 {
-      font-size: 11px;
-      color: #0284c7;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-      letter-spacing: 0.5px;
-    }
+    .dialogue-modal h4 { font-size: 11px; color: #0284c7; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
 
-    .dialogue-modal p {
-      font-size: 13px;
-      color: #0f172a;
-      font-weight: 500;
-      line-height: 1.4;
-      padding-right: 16px;
-    }
+    .dialogue-modal p { font-size: 13px; color: #0f172a; font-weight: 500; line-height: 1.4; padding-right: 16px; }
 
-    .name-edit-container {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 8px;
-    }
+    .name-edit-container { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; }
 
     .inline-name-input {
       background: rgba(147, 51, 234, 0.1);
@@ -274,22 +291,9 @@
       cursor: pointer;
     }
 
-    .choice-container {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-top: 10px;
-    }
+    .choice-container { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 
-    .choice-btn {
-      background: #0284c7;
-      text-align: left;
-      padding: 8px 10px;
-      border-radius: 8px;
-      font-size: 12px;
-      line-height: 1.2;
-    }
-
+    .choice-btn { background: #0284c7; text-align: left; padding: 8px 10px; border-radius: 8px; font-size: 12px; line-height: 1.2; }
     .choice-btn:hover { background: #0369a1; }
 
     /* Overlay Fullscreen Cards (Quiz & Room Transition) */
@@ -319,25 +323,10 @@
       text-align: center;
     }
 
-    .card-content h3 {
-      font-size: 16px;
-      color: #0f172a;
-      margin-bottom: 8px;
-    }
+    .card-content h3 { font-size: 16px; color: #0f172a; margin-bottom: 8px; }
+    .card-content p { font-size: 13px; color: #475569; margin-bottom: 14px; line-height: 1.4; }
 
-    .card-content p {
-      font-size: 13px;
-      color: #475569;
-      margin-bottom: 14px;
-      line-height: 1.4;
-    }
-
-    .quiz-options {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
 
     .quiz-opt-btn {
       background: #f1f5f9;
@@ -352,10 +341,7 @@
       transition: all 0.2s;
     }
 
-    .quiz-opt-btn:hover {
-      background: #e2e8f0;
-      border-color: #0284c7;
-    }
+    .quiz-opt-btn:hover { background: #e2e8f0; border-color: #0284c7; }
 
     .primary-btn {
       background: #10b981;
@@ -371,18 +357,7 @@
 
     .primary-btn:hover { background: #059669; }
 
-    .close-btn {
-      position: absolute;
-      top: 6px;
-      right: 10px;
-      background: none;
-      border: none;
-      font-size: 18px;
-      font-weight: bold;
-      color: #64748b;
-      cursor: pointer;
-    }
-
+    .close-btn { position: absolute; top: 6px; right: 10px; background: none; border: none; font-size: 18px; font-weight: bold; color: #64748b; cursor: pointer; }
     .close-btn:hover { color: #0f172a; }
 
     .hidden { display: none !important; }
@@ -394,15 +369,13 @@
     <div id="background-layer"></div>
     <div id="hotspots-layer"></div>
 
+    <!-- UI Overlay (always visible in a room) -->
     <div class="ui-overlay">
       <div class="top-bar">
         <div id="room-badge" class="badge-pill">🏥 Room Title</div>
         
-        <select id="test-room-select" class="room-select-dropdown" onchange="jumpToRoom(this.value)">
-          <option value="waiting">⚡ Jump: Waiting Room</option>
-          <option value="gp">⚡ Jump: GP Consultation</option>
-          <option value="ambulance">⚡ Jump: Ambulance</option>
-        </select>
+        <!-- Shortcut to exit to Map -->
+        <button id="map-shortcut" class="map-back-btn" onclick="exitToMap()">🗺️ View Hospital Map</button>
 
         <div class="top-actions">
           <div id="progress-badge" class="badge-pill">Explored: 0/0</div>
@@ -410,20 +383,49 @@
         </div>
       </div>
 
+      <!-- Dialogue / Info Bubble -->
       <div id="dialogue-box" class="dialogue-modal hidden">
         <button class="close-btn" onclick="closeDialogue()">&times;</button>
         <h4 id="speaker-name">Name</h4>
         <p id="speaker-text">Text content</p>
         
+        <!-- Editable Main Player Name -->
         <div id="player-name-editor" class="name-edit-container hidden">
           <input type="text" id="inline-name-input" class="inline-name-input" value="Emilia" placeholder="Enter Name">
           <button class="save-name-btn" onclick="savePlayerName()">Set Name</button>
         </div>
 
+        <!-- Interactive Dialogue Choices for Doctor & Paramedic & Pharmacist -->
         <div id="dialogue-choices" class="choice-container hidden"></div>
       </div>
     </div>
 
+    <!-- Fullscreen Hospital Map (Landing) -->
+    <div id="map-overlay">
+      <div id="map-title">Hospital Main Map Overview</div>
+      <div class="map-nodes-container">
+        <!-- Node 1: Waiting Room -->
+        <div class="map-node-card" onclick="jumpToRoom('waiting')">
+          <div class="map-icon">🏥</div>
+          <div class="map-node-title">Hospital Waiting Room</div>
+          <div class="map-node-desc">Check-in, meet staff, and learn hygiene basics.</div>
+        </div>
+        <!-- Node 2: GP -->
+        <div class="map-node-card" onclick="jumpToRoom('gp')">
+          <div class="map-icon">👨‍⚕️</div>
+          <div class="map-node-title">GP Consultation Room</div>
+          <div class="map-node-desc">Dr. Smith's office. Explore tools and anatomy.</div>
+        </div>
+        <!-- Node 3: Pharmacy -->
+        <div class="map-node-card" onclick="jumpToRoom('pharmacy')">
+          <div class="map-icon">💊</div>
+          <div class="map-node-title">City Pharmacy</div>
+          <div class="map-node-desc">Meet Sarah. Explore prescriptions & immunizations.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Modal -->
     <div id="quiz-modal" class="card-overlay hidden">
       <div class="card-content">
         <h3 id="quiz-title">Room Knowledge Quiz</h3>
@@ -433,18 +435,19 @@
       </div>
     </div>
 
+    <!-- Transition Popup Modal -->
     <div id="transition-modal" class="card-overlay hidden">
       <div class="card-content">
         <h3 id="trans-title">🎉 Quiz Passed!</h3>
         <p id="trans-text">You have mastered this room's medical knowledge.</p>
-        <button id="trans-action-btn" class="primary-btn" onclick="changeRoom('gp')">Proceed to Next Station</button>
+        <button id="trans-action-btn" class="primary-btn" onclick="exitToMap()">Proceed to Next Station</button>
       </div>
     </div>
   </div>
 
   <script>
     let playerName = "Emilia";
-    let currentRoomId = "waiting";
+    let currentRoomId = null;
     let activeChar = null;
     let npcStep = 0;
 
@@ -472,38 +475,18 @@
           { id: "w_i_board", type: "info", title: "Information Notice Board", x: "92%", y: "22%", text: "INFO: Notice boards inform patients about seasonal flu shots and hygiene policies." }
         ],
         quiz: [
-          {
-            q: "What is the primary role of Triage in a clinic waiting area?",
-            opts: ["To sell medications", "To prioritize patients by severity of symptoms", "To book future holidays"],
-            ans: 1
-          },
-          {
-            q: "Why is hand sanitizer used throughout waiting rooms?",
-            opts: ["To kill germs and prevent cross-contamination", "To clean shoes", "To scent the room"],
-            ans: 0
-          },
-          {
-            q: "Why is it important for receptionists to double-check patient details?",
-            opts: ["To ensure medical charts are accurate", "To collect entry fees", "To test handwriting"],
-            ans: 0
-          },
-          {
-            q: "What is the main benefit of having therapy dogs in hospital lobbies?",
-            opts: ["To guard the main doors", "To reduce patient stress and anxiety", "To entertain the medical staff"],
-            ans: 1
-          },
-          {
-            q: "Why is an arm sling used for an upper limb injury?",
-            opts: ["To immobilize bone joints for safe healing", "To keep the arm warm", "To hide the injury"],
-            ans: 0
-          }
+          { q: "What is the primary role of Triage in a clinic waiting area?", opts: ["To sell medications", "To prioritize patients by severity of symptoms", "To book future holidays"], ans: 1 },
+          { q: "Why is hand sanitizer used throughout waiting rooms?", opts: ["To kill germs and prevent cross-contamination", "To clean shoes", "To scent the room"], ans: 0 },
+          { q: "Why is it important for receptionists to double-check patient details?", opts: ["To ensure medical charts are accurate", "To collect entry fees", "To test handwriting"], ans: 0 },
+          { q: "What is the main benefit of having therapy dogs in hospital lobbies?", opts: ["To guard the main doors", "To reduce patient stress and anxiety", "To entertain the medical staff"], ans: 1 },
+          { q: "Why is an arm sling used for an upper limb injury?", opts: ["To immobilize bone joints for safe healing", "To keep the arm warm", "To hide the injury"], ans: 0 }
         ]
       },
       gp: {
         title: "👨‍⚕️ GP Consultation Room",
         image: "Gemini_Generated_Image_8xr0rp8xr0rp8xr0.jpg",
-        nextRoom: "ambulance",
-        nextRoomTitle: "Emergency Ambulance",
+        nextRoom: "pharmacy",
+        nextRoomTitle: "City Pharmacy",
         nodes: [
           { id: "gp_dr", type: "char", isInteractiveTree: "dr", name: "Dr. Smith (GP)", x: "19%", y: "45%", text: "Welcome in, {PLAYER}! Take a seat. How can I help you today?" },
           
@@ -515,75 +498,34 @@
           { id: "gp_i_poster", type: "info", title: "Health Bulletins", x: "11%", y: "24%", text: "INFO: Educational posters teach patients about balanced nutrition, vaccines, and wellness." }
         ],
         quiz: [
-          {
-            q: "What instrument on the equipment trolley measures blood pressure?",
-            opts: ["Stethoscope", "Sphygmomanometer", "Thermometer"],
-            ans: 1
-          },
-          {
-            q: "Why are anatomy charts used during consultation?",
-            opts: ["For decoration", "To visually explain health conditions to patients", "To test patient eyesight"],
-            ans: 1
-          },
-          {
-            q: "What medical tool does a doctor use to listen to heart and lung sounds?",
-            opts: ["Stethoscope", "Otoscope", "Sphygmomanometer"],
-            ans: 0
-          },
-          {
-            q: "Why do doctors monitor body weight and BMI on a scale?",
-            opts: ["To choose gym memberships", "To monitor physical growth and dosage accuracy", "To compare patients"],
-            ans: 1
-          },
-          {
-            q: "Why are prescription medicine cabinets kept locked in consultation rooms?",
-            opts: ["To prevent medication spoilage", "To securely store prescriptions and keep patients safe", "To save cabinet space"],
-            ans: 1
-          }
+          { q: "What instrument on the equipment trolley measures blood pressure?", opts: ["Stethoscope", "Sphygmomanometer", "Thermometer"], ans: 1 },
+          { q: "Why are anatomy charts used during consultation?", opts: ["For decoration", "To visually explain health conditions to patients", "To test patient eyesight"], ans: 1 },
+          { q: "What medical tool does a doctor use to listen to heart and lung sounds?", opts: ["Stethoscope", "Otoscope", "Sphygmomanometer"], ans: 0 },
+          { q: "Why do doctors monitor body weight and BMI on a scale?", opts: ["To choose gym memberships", "To monitor physical growth and dosage accuracy", "To compare patients"], ans: 1 },
+          { q: "Why are prescription medicine cabinets kept locked in consultation rooms?", opts: ["To prevent medication spoilage", "To securely store prescriptions and keep patients safe", "To save cabinet space"], ans: 1 }
         ]
       },
-      ambulance: {
-        title: "🚑 Emergency Ambulance Unit",
-        image: "Gemini_Generated_Image_5vfx3o5vfx3o5vfx.jpg",
-        nextRoom: "waiting",
+      pharmacy: {
+        title: "💊 City Pharmacy",
+        image: "Gemini_Generated_Image_2r2u5a2r2u5a2r2u.jpg",
+        nextRoom: "waiting", // For demo, loop back to the start
         nextRoomTitle: "Hospital Waiting Room",
         nodes: [
-          { id: "amb_paramedic", type: "char", isInteractiveTree: "paramedic", name: "Paramedic Sam", x: "44%", y: "78%", text: "Hi {PLAYER}! I'm Paramedic Sam. Welcome aboard our mobile emergency unit!" },
-          { id: "amb_player", type: "char", isPlayer: true, name: "Player", x: "28%", y: "78%", text: "Hi Sam! Wow, there are so many life-saving tools inside this ambulance!" },
+          { id: "phar_sarah", type: "char", isInteractiveTree: "pharmacist", name: "Sarah (Pharmacist)", x: "42%", y: "43%", text: "Hello! I'm Sarah. I prepare prescriptions and offer health advice. How can I help you, {PLAYER}?" },
           
-          // Info ("i") Points inside Ambulance
-          { id: "amb_i_stretcher", type: "info", title: "Ambulance Stretcher Bed", x: "42%", y: "52%", text: "INFO: The wheeled stretcher safely secures and transports patients comfortably into emergency care." },
-          { id: "amb_i_oxygen", type: "info", title: "Oxygen Cylinder Unit", x: "33%", y: "38%", text: "INFO: Supplies compressed oxygen to support patients experiencing difficulty breathing or respiratory trauma." },
-          { id: "amb_i_defib", type: "info", title: "ECG Defibrillator Monitor", x: "39%", y: "35%", text: "INFO: Monitors heart rhythm and can deliver electrical shocks to restore normal cardiac rhythms in emergencies." },
-          { id: "amb_i_shelves", type: "info", title: "Emergency Supply Shelves", x: "38%", y: "16%", text: "INFO: Contains sterile IV fluids, bandages, splints, and emergency medications for rapid access on scene." },
-          { id: "amb_i_firstaid", type: "info", title: "First Aid Kit & Trauma Bags", x: "47%", y: "34%", text: "INFO: Portable trauma kits allow paramedics to carry essential life-support equipment directly to casualties." }
+          // Info ("i") Points inside Pharmacy
+          { id: "phar_i_shelves_main", type: "info", title: "Main Shelving", x: "20%", y: "25%", text: "INFO: Shelves are organized. Only authorized staff can retrieve medications stored in this main area." },
+          { id: "phar_i_pills", type: "info", title: "Prescription Drugs", x: "29%", y: "47%", text: "INFO: All prescription drugs are regulated. The pharmacist verifies dosage instructions from the doctor." },
+          { id: "phar_i_poster_flu", type: "info", title: "Flu Shot Poster", x: "83%", y: "37%", text: "INFO: Pharmacies often provide immunizations, like flu shots, to support public health." },
+          { id: "phar_i_toothpastes", type: "info", title: "Over-the-Counter Products", x: "9%", y: "48%", text: "INFO: These are 'OTC' products like toothpastes and non-prescription meds, available to everyone." },
+          { id: "phar_i_till", type: "info", title: "Point of Sale (Till)", x: "61%", y: "54%", text: "INFO: At check-out, the pharmacist confirms you understand how to use any medication before payment." }
         ],
         quiz: [
-          {
-            q: "What is the primary purpose of an ECG Defibrillator inside an ambulance?",
-            opts: ["To measure body temperature", "To monitor heart rhythm and deliver shocks during cardiac emergencies", "To check blood sugar levels"],
-            ans: 1
-          },
-          {
-            q: "Why do ambulances carry compressed Oxygen Cylinders?",
-            opts: ["To inflate tires", "To assist patients who have severe difficulty breathing", "To keep the ambulance cool"],
-            ans: 1
-          },
-          {
-            q: "How does a portable Trauma Bag assist paramedics?",
-            opts: ["It carries essential emergency kit directly to injured people on scene", "It holds the paramedic's personal lunch", "It cleans the ambulance floor"],
-            ans: 0
-          },
-          {
-            q: "What is the main function of the ambulance stretcher?",
-            opts: ["To serve as a seat for paramedics", "To safely hold and transport patients comfortably", "To store extra medical boxes"],
-            ans: 1
-          },
-          {
-            q: "Why are ambulance supply shelves organized and labelled clearly?",
-            opts: ["For fast, immediate access to critical life-saving items during urgent transport", "To look nice for photos", "To store old medical records"],
-            ans: 0
-          }
+          { q: "Who is authorized to retrieve medications from the locked main shelving area?", opts: ["Authorized pharmacy staff only", "Any patient in the shop", "The delivery driver"], ans: 0 },
+          { q: "What is an important public health service often provided by pharmacies?", opts: ["Free gym memberships", "Routine immunizations (like flu shots)", "Holiday booking services"], ans: 1 },
+          { q: "What does OTC stand for in a pharmacy setting?", opts: ["On The Case", "Over-The-Counter products", "Off-The-Cabinet meds"], ans: 1 },
+          { q: "Why must the pharmacist verify instructions on a prescription?", opts: ["To ensure the dosage and instructions from the doctor are safe and accurate", "To decide if they like the doctor's handwriting", "To make the waiting time longer"], ans: 0 },
+          { q: "What is the primary function of checking an expiry date on medication?", opts: ["To check the shelf's neatness", "To ensure the product is still safe and effective", "To decide when to hold a sale"], ans: 1 }
         ]
       }
     };
@@ -595,74 +537,37 @@
     // Interactive Dialogue Decision Trees
     const dialogueTrees = {
       dr: [
-        {
-          speaker: "Dr. Smith (GP)",
-          text: "Welcome in, {PLAYER}! Take a seat. How can I help you today?",
-          choices: [
-            { label: "I want to learn about health checkups.", next: 1 },
-            { label: "What tools do you use here?", next: 2 }
-          ]
-        },
-        {
-          speaker: "Dr. Smith (GP)",
-          text: "Regular checkups help us spot health changes early. We measure heart rate, blood pressure, and review habits!",
-          choices: [
-            { label: "That makes sense! What about medical tools?", next: 2 },
-            { label: "Thanks Dr. Smith, I understand!", next: 3 }
-          ]
-        },
-        {
-          speaker: "Dr. Smith (GP)",
-          text: "I use a stethoscope to listen to lungs & heart beats, and the trolley equipment to check vital stats.",
-          choices: [
-            { label: "Great! Thanks for explaining everything.", next: 3 }
-          ]
-        },
-        {
-          speaker: "Dr. Smith (GP)",
-          text: "You're very welcome, {PLAYER}! Feel free to inspect the anatomical chart and tools in the room.",
-          choices: []
-        }
+        { speaker: "Dr. Smith (GP)", text: "Welcome in, {PLAYER}! Take a seat. How can I help you today?", choices: [ { label: "I want to learn about health checkups.", next: 1 }, { label: "What tools do you use here?", next: 2 } ] },
+        { speaker: "Dr. Smith (GP)", text: "Regular checkups help us spot health changes early. We measure heart rate, blood pressure, and review habits!", choices: [ { label: "That makes sense! What about medical tools?", next: 2 }, { label: "Thanks Dr. Smith, I understand!", next: 3 } ] },
+        { speaker: "Dr. Smith (GP)", text: "I use a stethoscope to listen to lungs & heart beats, and the trolley equipment to check vital stats.", choices: [ { label: "Great! Thanks for explaining everything.", next: 3 } ] },
+        { speaker: "Dr. Smith (GP)", text: "You're very welcome, {PLAYER}! Feel free to inspect the anatomical chart and tools in the room.", choices: [] }
       ],
-      paramedic: [
-        {
-          speaker: "Paramedic Sam",
-          text: "Hi {PLAYER}! I'm Paramedic Sam. We respond quickly whenever someone needs urgent medical care!",
-          choices: [
-            { label: "What happens when you receive an emergency call?", next: 1 },
-            { label: "What kind of equipment is inside the ambulance?", next: 2 }
-          ]
-        },
-        {
-          speaker: "Paramedic Sam",
-          text: "We turn on our blue lights and sirens so traffic moves aside, allowing us to reach patients as fast as possible!",
-          choices: [
-            { label: "That's incredible! What tools do you carry onboard?", next: 2 },
-            { label: "How do you help patients on the way to hospital?", next: 3 }
-          ]
-        },
-        {
-          speaker: "Paramedic Sam",
-          text: "We have oxygen tanks, heart defibrillators, splints, and trauma bags right behind us in these cabinets!",
-          choices: [
-            { label: "How do you care for patients while driving?", next: 3 }
-          ]
-        },
-        {
-          speaker: "Paramedic Sam",
-          text: "One paramedic drives safely while the other stays in back monitoring vitals and administering medicine on the stretcher!",
-          choices: [
-            { label: "Thank you Sam! I'm going to inspect the ambulance now.", next: 4 }
-          ]
-        },
-        {
-          speaker: "Paramedic Sam",
-          text: "Take a look around, {PLAYER}! Feel free to inspect the oxygen cylinder, stretcher, and defibrillator!",
-          choices: []
-        }
+      pharmacist: [
+        { speaker: "Sarah (Pharmacist)", text: "Welcome to City Pharmacy, {PLAYER}! Are you here to pick up a prescription or need some general health advice?", choices: [ { label: "What exactly is a prescription?", next: 1 }, { label: "I want to know about OTC products.", next: 2 } ] },
+        { speaker: "Sarah (Pharmacist)", text: "A prescription is a detailed instruction from your doctor about a specific medication and how to take it. I verify it and prepare the exact dose for you.", choices: [ { label: "Understood. How about over-the-counter meds?", next: 2 }, { label: "Thanks for clarifying that, Sarah!", next: 3 } ] },
+        { speaker: "Sarah (Pharmacist)", text: "OTC stands for Over-The-Counter. These are safe, common medications (like toothpastes or mild pain relief) you can buy directly from the shelves without a doctor's note.", choices: [ { label: "Okay. And what does a prescription do?", next: 1 }, { label: "Thanks, Sarah!", next: 3 } ] },
+        { speaker: "Sarah (Pharmacist)", text: "My pleasure, {PLAYER}! Remember to always check expiry dates, and let me know if you are interested in a flu shot!", choices: [] }
       ]
     };
 
+    // Navigation and Map Logic
+    function exitToMap() {
+      // Fade in the map overlay
+      document.getElementById('map-overlay').classList.remove('fade-out');
+      // Hide room dialogue
+      closeDialogue();
+      currentRoomId = null;
+    }
+
+    function jumpToRoom(roomId) {
+      if (rooms[roomId]) {
+        // Fade out the map overlay
+        document.getElementById('map-overlay').classList.add('fade-out');
+        loadRoom(roomId);
+      }
+    }
+
+    // Existing Room and Interactivity Logic
     function loadRoom(roomId) {
       currentRoomId = roomId;
       interactedNodes.clear();
@@ -673,19 +578,9 @@
       document.getElementById('room-badge').innerText = room.title;
       document.getElementById('background-layer').style.backgroundImage = `url('${room.image}')`;
       
-      // Update testing dropdown synchronization
-      const dropdown = document.getElementById('test-room-select');
-      if (dropdown) dropdown.value = roomId;
-
       closeDialogue();
       updateProgress();
       renderHotspots();
-    }
-
-    function jumpToRoom(targetRoomId) {
-      if (rooms[targetRoomId]) {
-        loadRoom(targetRoomId);
-      }
     }
 
     function renderHotspots() {
@@ -775,7 +670,6 @@
       box.classList.remove('hidden');
     }
 
-    /* Interactive Tree Dialogue Handler (Doctor & Paramedic) */
     let currentTreeKey = null;
 
     function startNpcConversation(treeKey) {
@@ -824,7 +718,7 @@
       document.getElementById('dialogue-box').classList.add('hidden');
     }
 
-    /* Quiz Logic */
+    // Quiz Logic
     function startQuiz() {
       currentQuizIndex = 0;
       quizScore = 0;
@@ -888,15 +782,16 @@
 
       if (passRate >= 0.8) {
         transTitle.innerText = "🎉 Quiz Passed!";
-        transText.innerText = `Great job, ${playerName}! You passed with ${Math.round(passRate * 100)}% (${quizScore}/${room.quiz.length}). You can now travel to the next room.`;
-        actionBtn.innerText = `Go to ${room.nextRoomTitle}`;
+        transText.innerText = `Great job, ${playerName}! You passed with ${Math.round(passRate * 100)}% (${quizScore}/${room.quiz.length}). You have mastered this room's knowledge.`;
+        // Keep exit to map for all nodes
+        actionBtn.innerText = `Back to Main Map Overview`;
         actionBtn.onclick = () => {
           transModal.classList.add('hidden');
-          loadRoom(room.nextRoom);
+          exitToMap();
         };
       } else {
         transTitle.innerText = "❌ Try Again";
-        transText.innerText = `You scored ${Math.round(passRate * 100)}% (${quizScore}/${room.quiz.length}). You need at least 80% (4/5 correct) to pass and unlock the next room.`;
+        transText.innerText = `You scored ${Math.round(passRate * 100)}% (${quizScore}/${room.quiz.length}). You need at least 80% (4/5 correct) to pass.`;
         actionBtn.innerText = "Retry Quiz";
         actionBtn.onclick = () => {
           transModal.classList.add('hidden');
@@ -907,8 +802,8 @@
       transModal.classList.remove('hidden');
     }
 
-    // Initialize Game on load
-    loadRoom('waiting');
+    // Initialize Game on load by showing the Map
+    exitToMap();
   </script>
 </body>
 </html>
